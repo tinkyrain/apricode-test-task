@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Providers;
+
 class EmployeesProvider
 {
     /**

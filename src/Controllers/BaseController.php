@@ -1,6 +1,6 @@
 <?php
 
-namespace Controllers;
+namespace App\Controllers;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;

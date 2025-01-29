@@ -1,10 +1,14 @@
 <?php
 
-use Controllers\BaseController;
+namespace App\Controllers\Employee;
+
+use App\Controllers\BaseController;
+use App\Providers\EmployeesProvider;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class EmployeeControllers extends BaseController
+class EmployeeController extends BaseController
 {
     /**
      * This method display employee list
@@ -17,7 +21,7 @@ class EmployeeControllers extends BaseController
     {
         try {
             $arEmployeesList = EmployeesProvider::getEmployees();
-            return $this->view($request, $response, 'employee_list',$arEmployeesList);
+            return $this->view($request, $response, 'Pages\employee_list.twig',$arEmployeesList);
         } catch (Exception $e) {
             die('Error: ' . $e->getMessage());
         }

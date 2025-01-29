@@ -1,5 +1,6 @@
 <?php
 
+use App\Storage\Database;
 use Slim\App;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
@@ -19,11 +20,18 @@ function initApp(): App
         $app = AppFactory::create(); //application init
 
         //region twig
-        $twig = Twig::create(__DIR__ . '/src/Views/', ['cache' => false]);
+        $twig = Twig::create(__DIR__ . '\src\Views', ['cache' => false]);
         $app->add(TwigMiddleware::create($app, $twig));
         //endregion
 
-        require_once __DIR__ . '/routes/routes.php'($app); //include routes
+        //region load env
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+        $dotenv->load();
+        //endregion
+
+        Database::getInstance(); //create DB class instance
+
+        (require_once __DIR__ . '/routes/routes.php')($app); //include routes
 
         return $app;
     } catch (Exception $e) {
