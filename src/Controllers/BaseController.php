@@ -15,17 +15,17 @@ abstract class BaseController
     /**
      * Load twig view
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param string $templateName
-     * @param array $data
+     * @param ServerRequestInterface $obRequest
+     * @param ResponseInterface $obResponse
+     * @param string $strTemplateName
+     * @param array $arData
      * @return ResponseInterface
      */
-    public function view(ServerRequestInterface $request, ResponseInterface $response, string $templateName, array $data = []): ResponseInterface
+    public function view(ServerRequestInterface $obRequest, ResponseInterface $obResponse, string $strTemplateName, array $arData = []): ResponseInterface
     {
         try {
-            $view = Twig::fromRequest($request);
-            return $view->render($response, $templateName, $data);
+            $obView = Twig::fromRequest($obRequest);
+            return $obView->render($obResponse, $strTemplateName, $arData);
         } catch (LoaderError|RuntimeError|SyntaxError|Exception $e) {
             die('Template load error: ' . $e->getMessage());
         }
