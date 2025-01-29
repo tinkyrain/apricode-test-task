@@ -2,23 +2,26 @@
 
 namespace App\Providers;
 
+use App\Storage\Database;
+use Exception;
+
 class EmployeesProvider
 {
     /**
      * This method return employee list
      *
      * @return array[]
+     * @throws Exception
      */
-    public static function getEmployees(): array
+    public static function getEmployees(array $data = []): array
     {
-        return [
-            [
-                'id' => 1,
-                'name' => 'Employee Name',
-                'email' => 'email@email.com',
-                'phone' => '+7 (123) 456-78-90',
-                'category_id' => 1
-            ]
-        ];
+        try {
+            $obDatabase = Database::getInstance();
+
+            $strQuery = '';
+
+        } catch (Exception $e) {
+            throw new Exception("Employees Provider Error: " . $e->getMessage());
+        }
     }
 }

@@ -8,9 +8,9 @@ use PDOStatement;
 
 class Database
 {
-    private static ?Database $instance = null;
-    private ?PDO $pdo;
-    private false|PDOStatement $stmt;
+    private static ?Database $obInstance = null;
+    private ?PDO $obPdo;
+    private false|PDOStatement $obStmt;
 
     /**
      * @throws Exception
@@ -18,8 +18,8 @@ class Database
     private function __construct()
     {
         try {
-            $this->pdo = new PDO($_ENV['DATABASE_PROVIDER'] . ':host=' . $_ENV['DATABASE_HOST'] . ';dbname=' . $_ENV['DATABASE_NAME'], $_ENV['DATABASE_USERNAME'], $_ENV['DATABASE_PASSWORD']);
-            $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $this->obPdo = new PDO($_ENV['DATABASE_PROVIDER'] . ':host=' . $_ENV['DATABASE_HOST'] . ';dbname=' . $_ENV['DATABASE_NAME'], $_ENV['DATABASE_USERNAME'], $_ENV['DATABASE_PASSWORD']);
+            $this->obPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (Exception $e) {
             throw new Exception('Database connection error: ' . $e->getMessage());
         }
@@ -32,23 +32,23 @@ class Database
      */
     public static function getInstance(): Database
     {
-        if (is_null(self::$instance)) self::$instance = new Database();
-        return self::$instance;
+        if (is_null(self::$obInstance)) self::$obInstance = new Database();
+        return self::$obInstance;
     }
 
     /**
      * This method execute SQL query
      *
-     * @param $query
-     * @param $params
+     * @param string $strQuery
+     * @param array $arParams
      * @return bool|PDOStatement
      */
-    public function executeQuery($query, $params = array()): bool|PDOStatement
+    public function executeQuery(string $strQuery, array $arParams = []): bool|PDOStatement
     {
-        if ($this->stmt) $this->stmt = null;
-        $this->stmt = $this->pdo->prepare($query);
-        $this->stmt->execute($params);
-        return $this->stmt;
+        if ($this->obStmt) $this->obStmt = null;
+        $this->obStmt = $this->obPdo->prepare($strQuery, $arParams);
+        $this->obStmt->execute($arParams);
+        return $this->obStmt;
     }
 
     /**
@@ -58,7 +58,7 @@ class Database
      */
     public function fetchAll(): bool|array
     {
-        return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->obStmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -68,7 +68,7 @@ class Database
      */
     public function startTransaction(): void
     {
-        $this->pdo->beginTransaction();
+        $this->obPdo->beginTransaction();
     }
 
     /**
@@ -78,7 +78,7 @@ class Database
      */
     public function commit(): void
     {
-        $this->pdo->commit();
+        $this->obPdo->commit();
     }
 
     /**
@@ -88,7 +88,7 @@ class Database
      */
     public function rollback(): void
     {
-        $this->pdo->rollback();
+        $this->obPdo->rollback();
     }
 
     /**
@@ -98,6 +98,6 @@ class Database
      */
     public function close(): void
     {
-        $this->pdo = null;
+        $this->obPdo = null;
     }
 }
