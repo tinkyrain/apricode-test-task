@@ -1,1 +1,50 @@
-<p>1</p>
+{{ header }}
+<main class="bg-gray-700 w-full h-full">
+    <div class="container mx-auto mt-10 bg-gray-800">
+        <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    №
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Имя
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Телефон
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Email
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for employee in employee_list %}
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ employee.id }}
+                    </th>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        {{ employee.name }}
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ employee.phone }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ employee.email }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="container mx-auto mt-10 flex justify-center items-center gap-10">
+        <a href="/add" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Добавить сотрудника
+        </a>
+        <a href="/export" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Экспорт
+        </a>
+    </div>
+</main>
+{{ footer }}

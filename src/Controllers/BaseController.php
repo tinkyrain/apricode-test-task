@@ -25,8 +25,28 @@ abstract class BaseController
     {
         try {
             $obView = Twig::fromRequest($obRequest);
-            return $obView->render($obResponse, $strTemplateName, $arData);
+            $strView = html_entity_decode($obView->fetch($strTemplateName, $arData), ENT_QUOTES, 'UTF-8');
+            $obResponse->getBody()->write($strView);
+            return $obResponse->withHeader('Content-type', 'text/html');
         } catch (LoaderError|RuntimeError|SyntaxError|Exception $e) {
+            die('Template load error: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * This method return string content template
+     *
+     * @param ServerRequestInterface $obRequest
+     * @param string $strTemplateName
+     * @param array $arData
+     * @return string
+     */
+    public function loadTemplate(ServerRequestInterface $obRequest, string $strTemplateName, array $arData = []): string
+    {
+        try {
+            $obView = Twig::fromRequest($obRequest);
+            return html_entity_decode($obView->fetch($strTemplateName, $arData), ENT_QUOTES, 'UTF-8');
+        } catch (Exception $e) {
             die('Template load error: ' . $e->getMessage());
         }
     }

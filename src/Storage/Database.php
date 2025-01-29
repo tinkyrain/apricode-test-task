@@ -9,8 +9,8 @@ use PDOStatement;
 class Database
 {
     private static ?Database $obInstance = null;
-    private ?PDO $obPdo;
-    private false|PDOStatement $obStmt;
+    private ?PDO $obPdo = null;
+    private bool|PDOStatement $obStmt = false;
 
     /**
      * @throws Exception
@@ -29,11 +29,16 @@ class Database
      * This method return Storage\Database instance
      *
      * @return Database
+     * @throws Exception
      */
     public static function getInstance(): Database
     {
-        if (is_null(self::$obInstance)) self::$obInstance = new Database();
-        return self::$obInstance;
+        try {
+            if (is_null(self::$obInstance)) self::$obInstance = new Database();
+            return self::$obInstance;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
@@ -42,53 +47,78 @@ class Database
      * @param string $strQuery
      * @param array $arParams
      * @return bool|PDOStatement
+     * @throws Exception
      */
     public function executeQuery(string $strQuery, array $arParams = []): bool|PDOStatement
     {
-        if ($this->obStmt) $this->obStmt = null;
-        $this->obStmt = $this->obPdo->prepare($strQuery, $arParams);
-        $this->obStmt->execute($arParams);
-        return $this->obStmt;
+        try {
+            if ($this->obStmt) $this->obStmt = null;
+            $this->obStmt = $this->obPdo->prepare($strQuery, $arParams);
+            $this->obStmt->execute($arParams);
+            return $this->obStmt;
+        } catch (Exception $e) {
+            throw new Exception('Database query error: ' . $e->getMessage());
+        }
     }
 
     /**
      * This method fetch data obtained from the database
      *
      * @return bool|array
+     * @throws Exception
      */
     public function fetchAll(): bool|array
     {
-        return $this->obStmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            return $this->obStmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
      * This method start transaction
      *
      * @return void
+     * @throws Exception
      */
     public function startTransaction(): void
     {
-        $this->obPdo->beginTransaction();
+        try {
+            $this->obPdo->beginTransaction();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
      * This method commit changes to a transaction
      *
      * @return void
+     * @throws Exception
      */
     public function commit(): void
     {
-        $this->obPdo->commit();
+        try {
+            $this->obPdo->commit();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
      * This method rollback changes to a transaction
      *
      * @return void
+     * @throws Exception
      */
     public function rollback(): void
     {
-        $this->obPdo->rollback();
+        try {
+            $this->obPdo->rollback();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
