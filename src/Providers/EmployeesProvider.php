@@ -25,4 +25,30 @@ class EmployeesProvider
             throw new Exception($e->getMessage());
         }
     }
+
+    /**
+     * This method add employee
+     *
+     * @param array $arData
+     * @throws Exception
+     */
+    public static function createEmployee(array $arData): void
+    {
+        try {
+            $obDatabase = Database::getInstance();
+            $strQuery = '
+                INSERT INTO public.employees(
+                name, phone, email, category_id)
+                VALUES (:name, :phone, :email, :category_id)
+            ';
+            $obDatabase->executeQuery($strQuery, [
+                ':name' => $arData['name'],
+                ':phone' => $arData['phone'],
+                ':email' => $arData['email'],
+                ':category_id' => $arData['category']
+            ]);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
 }

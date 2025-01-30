@@ -8,9 +8,17 @@ use App\Providers\EmployeesProvider;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use SlimSession\Helper;
 
 class EmployeePageController extends BaseController
 {
+    private Helper $obSession;
+
+    public function __construct()
+    {
+        $this->obSession = new Helper();
+    }
+
     /**
      * This method display employee list
      *
@@ -48,6 +56,11 @@ class EmployeePageController extends BaseController
             ]);
             $data['footer'] = $this->loadTemplate($request, 'Common/footer.twig');
             $data['categories_list'] = CategoriesProvider::getCategories();
+            $data['errors'] = $this->obSession->get('add_form_errors') ?? [];
+            $data['fields_value'] = $this->obSession->get('add_form_fields_value') ?? [];
+
+            $this->obSession->delete('add_form_errors');
+            $this->obSession->delete('add_form_fields_value');
 
             return $this->view($request, $response, 'Pages/employee_add.twig', $data);
         } catch (Exception $e) {

@@ -17,7 +17,8 @@
     "slim/psr7": "^1.7",
     "ext-pdo": "*",
     "vlucas/phpdotenv": "^5.6",
-    "respect/validation": "^2.4"
+    "respect/validation": "^2.4",
+    "bryanjhv/slim-session": "~4.0"
   },
   "config": {
     "secure-http": false

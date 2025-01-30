@@ -3,6 +3,7 @@
 use App\Storage\Database;
 use Slim\App;
 use Slim\Factory\AppFactory;
+use Slim\Middleware\Session;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
 
@@ -22,6 +23,16 @@ function initApp(): App
         error_reporting(E_ALL);
 
         $app = AppFactory::create(); //application init
+
+        //region session
+        $app->add(
+            new Session([
+                'name' => 'application_session',
+                'autorefresh' => true,
+                'lifetime' => '1 hour',
+            ])
+        );
+        //endregion
 
         //region twig
         $twig = Twig::create(__DIR__ . '\src\Views', ['cache' => false]);

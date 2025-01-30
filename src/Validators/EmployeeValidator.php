@@ -4,12 +4,12 @@ namespace App\Validators;
 
 use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use Respect\Validation\Exceptions\NestedValidationException;
 use Respect\Validation\Validator as v;
-use Respect\Validation\Exceptions\ValidationException;
 
 class EmployeeValidator
 {
-    private array $arErrors = [
+    private static array $arErrors = [
         'name' => [
             'length' => 'Имя сотрудника должно иметь от 1 до 255 символов',
             'notBlank' => 'Это поле обязательно для заполнения!'
@@ -17,12 +17,12 @@ class EmployeeValidator
         'phone' => [
             'length' => 'Номер телефона должен иметь от 1 до 12 символов',
             'notBlank' => 'Это поле обязательно для заполнения!',
-            'phone' => 'Введите номер телефона!'
+            'phone' => 'Введите действительный номер телефона!'
         ],
         'email' => [
             'length' => 'Почта должна иметь от 1 до 255 символов',
             'notBlank' => 'Это поле обязательно для заполнения!',
-            'email' => 'Введите почту!'
+            'email' => 'Введите действительную почту'
         ],
         'category' => [
             'notBlank' => 'Это поле обязательно для заполнения!',
@@ -32,18 +32,17 @@ class EmployeeValidator
     /**
      * This method validate employee create form
      *
-     * @param ServerRequestInterface $obRequest
-     * @return void
+     * @param array $arData
+     * @return array
      * @throws Exception
      */
-    public static function createValidation(ServerRequestInterface $obRequest)
+    public static function createValidation(array $arData = []): array
     {
         try {
-            $arData = json_decode($obRequest->getBody()->getContents(), true);
             $arRules = [
                 'name' => V::length(1, 255)->notBlank(),
                 'phone' => V::length(1, 12)->notBlank()->phone(),
-                'email' => V::length(1, 12)->notBlank()->email(),
+                'email' => V::length(1, 255)->notBlank()->email(),
                 'category' => V::notBlank(),
             ];
             $arValidateErrors = [];
@@ -51,11 +50,13 @@ class EmployeeValidator
             foreach ($arRules as $strField => $obRule) {
                 try {
                     $obRule->assert($arData[$strField]);
-                } catch (ValidationException $e) {
-                    $strRuleName = $e->getMessage();
+                } catch (NestedValidationException $e) {
+                    $arMessagesList = $e->getMessages(self::$arErrors[$strField]);
+                    $arValidateErrors[$strField] = array_values($arMessagesList)[0];
                 }
             }
 
+            return $arValidateErrors;
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
