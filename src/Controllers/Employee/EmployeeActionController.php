@@ -2,6 +2,7 @@
 
 namespace App\Controllers\Employee;
 
+use App\Controllers\BaseController;
 use App\Providers\EmployeesProvider;
 use App\Validators\EmployeeValidator;
 use Exception;
@@ -10,43 +11,32 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 use SlimSession\Helper;
 
-class EmployeeActionController
+class EmployeeActionController extends BaseController
 {
-    private Helper $obSession;
-
-    public function __construct()
-    {
-        $this->obSession = new Helper();
-    }
-
     /**
      * This method create employee
      *
      * @throws Exception
      * @throws Exception
      */
-    public function create(ServerRequestInterface $obRequest, ResponseInterface $obResponse)
+    public function create(ServerRequestInterface $obRequest, ResponseInterface $obResponse): \Psr\Http\Message\MessageInterface|ResponseInterface
     {
         try {
             $arData = $obRequest->getParsedBody();
             $obRouteParser = RouteContext::fromRequest($obRequest)->getRouteParser();
             $arValidateError = EmployeeValidator::createValidation($arData); //validate data
 
+            //if errors, then redirect on add form with errors
             if ($arValidateError) {
                 $strAddPageUrl = $obRouteParser->urlFor('add');
                 $this->obSession->set('add_form_errors', $arValidateError);
                 $this->obSession->set('add_form_fields_value', $arData);
-
-                return $obResponse
-                    ->withHeader('Location', $strAddPageUrl)
-                    ->withStatus(302);
+                return $this->redirect($obResponse, $strAddPageUrl);
             }
 
             EmployeesProvider::createEmployee($arData);
             $strMainPageUrl = $obRouteParser->urlFor('main');
-            return $obResponse
-                ->withHeader('Location', $strMainPageUrl)
-                ->withStatus(302);
+            return $this->redirect($obResponse, $strMainPageUrl);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }

@@ -12,13 +12,6 @@ use SlimSession\Helper;
 
 class EmployeePageController extends BaseController
 {
-    private Helper $obSession;
-
-    public function __construct()
-    {
-        $this->obSession = new Helper();
-    }
-
     /**
      * This method display employee list
      *
