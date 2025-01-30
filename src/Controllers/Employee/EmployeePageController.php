@@ -18,6 +18,7 @@ class EmployeePageController extends BaseController
      * @param ServerRequestInterface $obRequest
      * @param ResponseInterface $obResponse
      * @return ResponseInterface
+     * @throws Exception
      */
     public function index(ServerRequestInterface $obRequest, ResponseInterface $obResponse): ResponseInterface
     {
@@ -30,7 +31,7 @@ class EmployeePageController extends BaseController
 
             return $this->view($obRequest, $obResponse, 'Pages/employee_list.twig', $arData);
         } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -40,6 +41,7 @@ class EmployeePageController extends BaseController
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
+     * @throws Exception
      */
     public function create(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
@@ -57,7 +59,7 @@ class EmployeePageController extends BaseController
 
             return $this->view($request, $response, 'Pages/employee_add.twig', $data);
         } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }

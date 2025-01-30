@@ -32,6 +32,7 @@ abstract class BaseController
      * @param string $strTemplateName
      * @param array $arData
      * @return ResponseInterface
+     * @throws Exception
      */
     protected function view(ServerRequestInterface $obRequest, ResponseInterface $obResponse, string $strTemplateName, array $arData = []): ResponseInterface
     {
@@ -41,7 +42,7 @@ abstract class BaseController
             $obResponse->getBody()->write($strView);
             return $obResponse->withHeader('Content-type', 'text/html');
         } catch (LoaderError|RuntimeError|SyntaxError|Exception $e) {
-            die('Template load error: ' . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -52,6 +53,7 @@ abstract class BaseController
      * @param string $strTemplateName
      * @param array $arData
      * @return string
+     * @throws Exception
      */
     protected function loadTemplate(ServerRequestInterface $obRequest, string $strTemplateName, array $arData = []): string
     {
@@ -59,7 +61,7 @@ abstract class BaseController
             $obView = Twig::fromRequest($obRequest);
             return html_entity_decode($obView->fetch($strTemplateName, $arData), ENT_QUOTES, 'UTF-8');
         } catch (Exception $e) {
-            die('Template load error: ' . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -70,6 +72,7 @@ abstract class BaseController
      * @param string $strRedirectUrl
      * @param int $intRedirectCode
      * @return ResponseInterface
+     * @throws Exception
      */
     protected function redirect(ResponseInterface $obResponse, string $strRedirectUrl, int $intRedirectCode = 302): ResponseInterface
     {
@@ -78,7 +81,7 @@ abstract class BaseController
                 ->withHeader('Location', $strRedirectUrl)
                 ->withStatus($intRedirectCode);
         } catch (EXception $e) {
-            die('Redirect error: ' . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }
