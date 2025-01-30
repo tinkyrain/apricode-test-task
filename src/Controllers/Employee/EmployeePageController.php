@@ -15,20 +15,20 @@ class EmployeePageController extends BaseController
     /**
      * This method display employee list
      *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
+     * @param ServerRequestInterface $obRequest
+     * @param ResponseInterface $obResponse
      * @return ResponseInterface
      */
-    public function index(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function index(ServerRequestInterface $obRequest, ResponseInterface $obResponse): ResponseInterface
     {
         try {
-            $data['header'] = $this->loadTemplate($request, 'Common/header.twig', [
+            $arData['header'] = $this->loadTemplate($obRequest, 'Common/header.twig', [
                 'title' => 'Список сотрудников'
             ]);
-            $data['footer'] = $this->loadTemplate($request, 'Common/footer.twig');
-            $data['employee_list'] = EmployeesProvider::getEmployees();
+            $arData['footer'] = $this->loadTemplate($obRequest, 'Common/footer.twig');
+            $arData['employee_list'] = EmployeesProvider::getEmployees();
 
-            return $this->view($request, $response, 'Pages/employee_list.twig', $data);
+            return $this->view($obRequest, $obResponse, 'Pages/employee_list.twig', $arData);
         } catch (Exception $e) {
             die('Error: ' . $e->getMessage());
         }

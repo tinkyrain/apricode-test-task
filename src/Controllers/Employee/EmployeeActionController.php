@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Providers\EmployeesProvider;
 use App\Validators\EmployeeValidator;
 use Exception;
+use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
@@ -19,7 +20,7 @@ class EmployeeActionController extends BaseController
      * @throws Exception
      * @throws Exception
      */
-    public function create(ServerRequestInterface $obRequest, ResponseInterface $obResponse): \Psr\Http\Message\MessageInterface|ResponseInterface
+    public function create(ServerRequestInterface $obRequest, ResponseInterface $obResponse): ResponseInterface
     {
         try {
             $arData = $obRequest->getParsedBody();
