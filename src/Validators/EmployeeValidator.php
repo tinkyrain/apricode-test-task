@@ -2,8 +2,10 @@
 
 namespace App\Validators;
 
-use Awurth\Validator\Validator;
-use Respect\Validation\Validator as V;
+use Exception;
+use Psr\Http\Message\ServerRequestInterface;
+use Respect\Validation\Validator as v;
+use Respect\Validation\Exceptions\ValidationException;
 
 class EmployeeValidator
 {
@@ -28,21 +30,34 @@ class EmployeeValidator
     ];
 
     /**
-     * This method validate create employee form
+     * This method validate employee create form
      *
-     * @param $request
+     * @param ServerRequestInterface $obRequest
      * @return void
+     * @throws Exception
      */
-    public static function createValidation($request)
+    public static function createValidation(ServerRequestInterface $obRequest)
     {
-        $arRules = [
-            'name' => V::length(1, 255)->notBlank(),
-            'phone' => V::length(1, 12)->notBlank()->phone(),
-            'email' => V::length(1, 12)->notBlank()->email(),
-            'category' => V::notBlank(),
-        ];
+        try {
+            $arData = json_decode($obRequest->getBody()->getContents(), true);
+            $arRules = [
+                'name' => V::length(1, 255)->notBlank(),
+                'phone' => V::length(1, 12)->notBlank()->phone(),
+                'email' => V::length(1, 12)->notBlank()->email(),
+                'category' => V::notBlank(),
+            ];
+            $arValidateErrors = [];
 
-        $obValidator = (new V())->addRule();
-        $isValid = $obValidator->isValid();
+            foreach ($arRules as $strField => $obRule) {
+                try {
+                    $obRule->assert($arData[$strField]);
+                } catch (ValidationException $e) {
+                    $strRuleName = $e->getMessage();
+                }
+            }
+
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 }
