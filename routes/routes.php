@@ -15,5 +15,7 @@ return function (App $obApp) {
     //region actions
     $obApp->post('/action/add', [EmployeeActionController::class, 'create'])
         ->setName('add-action'); //add employee action
+    $obApp->get('/action/export', [EmployeeActionController::class, 'export'])
+        ->setName('export-action'); //add employee action
     //endregion
 };

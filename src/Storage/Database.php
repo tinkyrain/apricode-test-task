@@ -10,7 +10,7 @@ class Database
 {
     private static ?Database $obInstance = null;
     private ?PDO $obPdo = null;
-    private bool|PDOStatement $obStmt = false;
+    private ?PDOStatement $obStmt = null;
 
     /**
      * @throws Exception
@@ -21,7 +21,7 @@ class Database
             $this->obPdo = new PDO($_ENV['DATABASE_PROVIDER'] . ':host=' . $_ENV['DATABASE_HOST'] . ';dbname=' . $_ENV['DATABASE_NAME'], $_ENV['DATABASE_USERNAME'], $_ENV['DATABASE_PASSWORD']);
             $this->obPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (Exception $e) {
-            throw new Exception('Database connection error: ' . $e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -54,10 +54,14 @@ class Database
         try {
             if ($this->obStmt) $this->obStmt = null;
             $this->obStmt = $this->obPdo->prepare($strQuery, $arParams);
-            $this->obStmt->execute($arParams);
+            self::startTransaction();
+            $isSuccess = $this->obStmt->execute($arParams);
+            if (!$isSuccess) throw new Exception($this->obStmt->errorInfo());
+            self::commit();
             return $this->obStmt;
         } catch (Exception $e) {
-            throw new Exception('Database query error: ' . $e->getMessage());
+            self::rollback();
+            throw new Exception($e->getMessage());
         }
     }
 

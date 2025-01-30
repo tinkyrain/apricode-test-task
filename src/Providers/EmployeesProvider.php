@@ -17,7 +17,7 @@ class EmployeesProvider
     {
         try {
             $obDatabase = Database::getInstance();
-            $strQuery = 'select * from employees';
+            $strQuery = 'select id, name, phone, email, category_id from employees';
             $arResult = $obDatabase->executeQuery($strQuery)?->fetchAll();
             if ($arResult === false) throw new Exception('Get employee list error!');
             return $arResult;

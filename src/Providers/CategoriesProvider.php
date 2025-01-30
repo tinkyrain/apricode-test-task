@@ -17,7 +17,7 @@ class CategoriesProvider
     {
         try {
             $obDatabase = Database::getInstance();
-            $strQuery = 'select * from categories';
+            $strQuery = 'select id, name from categories';
             $arResult = $obDatabase->executeQuery($strQuery)?->fetchAll();
             if ($arResult === false) throw new Exception('Get categories list error!');
             return $arResult;
