@@ -3,11 +3,8 @@
 namespace App\Controllers;
 
 use Exception;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Interfaces\RouteParserInterface;
-use Slim\Routing\RouteContext;
 use Slim\Views\Twig;
 use SlimSession\Helper;
 use Twig\Error\LoaderError;

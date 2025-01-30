@@ -8,7 +8,6 @@ use App\Providers\EmployeesProvider;
 use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use SlimSession\Helper;
 
 class EmployeePageController extends BaseController
 {

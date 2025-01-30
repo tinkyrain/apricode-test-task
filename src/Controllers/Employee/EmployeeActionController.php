@@ -6,11 +6,9 @@ use App\Controllers\BaseController;
 use App\Providers\EmployeesProvider;
 use App\Validators\EmployeeValidator;
 use Exception;
-use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
-use SlimSession\Helper;
 
 class EmployeeActionController extends BaseController
 {
