@@ -18,10 +18,6 @@ require_once 'vendor/autoload.php';
 function initApp(): App
 {
     try {
-        ini_set('display_errors', 1);
-        ini_set('display_startup_errors', 1);
-        error_reporting(E_ALL);
-
         $app = AppFactory::create(); //application init
 
         //region session
